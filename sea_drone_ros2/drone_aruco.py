@@ -21,12 +21,12 @@ class DroneControl(Node):
         self.pub = self.create_publisher(String, 'controller', 10)
         dictionaly = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
         self.detector = cv2.aruco.ArucoDetector(dictionaly)
-        self.id = 0
+        self.id = 2
         self.corners, self.ids = None, None
 
     def makeTargetRoute(self):
         #target_route = np.array([[0.9,0.1], [0.9,0.9], [0.1,0.9], [0.1,0.1], [-1,-1]])           
-        target_route = np.array([1,2,3,4,5])       
+        target_route = np.array([7,1,2,3,4,5])       
         return target_route
     
     def detectMarkers(self, frame):

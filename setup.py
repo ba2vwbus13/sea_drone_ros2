@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'thruster = sea_drone_ros2.thruster:main'
+            'controller_aruco = sea_drone_ros2.controller_aruco:main',
+            'receiver = sea_drone_ros2.receiver:main'
         ],
     },
 )

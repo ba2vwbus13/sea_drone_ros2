@@ -17,7 +17,7 @@ class Receiver(Node):
         self.linear_R = 0.0
         self.linear_L = 0.0
         self.subscription = self.create_subscription(String, 'controller', self.set_joy, 1)
-        self.pub = self.create_publisher(Twist, '/verchal_joy', 1)
+        self.pub = self.create_publisher(String, '/verchal_joy', 1)
         timer_period = 0.1
         self.timer = self.create_timer(timer_period, self.run)
 
@@ -25,11 +25,14 @@ class Receiver(Node):
         rev = data.data.split(',')
         speed = float(rev[0])
         angle = float(rev[1])
+        WHEEL_DIST = 1
         self.linear_R = (angle*WHEEL_DIST)/2 + speed
         self.linear_L = speed*2-self.linear_R
+        self.get_logger().info("R:{},L:{}".format(self.linear_R, self.linear_L))
         self.previous_control_time = datetime.datetime.now()
 
     def run(self, reset=False):
+        msg = String()
         if datetime.datetime.now() > self.previous_control_time + datetime.timedelta(seconds=0.3):
             self.linear_R = 0.0
             self.linear_L = 0.0

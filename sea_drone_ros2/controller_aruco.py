@@ -1,14 +1,13 @@
 #!/home/nakahira/work/yolov8/bin/python
 import cv2
 import numpy as np
-from ultralytics import YOLO
 import rclpy
 from .drone_aruco import DroneControl
 #import drone
 #!/usr/bin/env python3
 def main(args=None):
     # ウェブカメラのキャプチャを開始
-    video_path = 0
+    video_path = 2
     cap = cv2.VideoCapture(video_path)
     img_size = np.array([cap.get(cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)])
     # fps = int(cap.get(cv2.CAP_PROP_FPS))
