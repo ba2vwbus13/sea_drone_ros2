@@ -21,14 +21,15 @@ class Thruster(Node):
         self.pwm_R.hardware_PWM(self.output_pin_R, self.pwm_frequency, self.ratio_to_duty(0.5))#0=forward 0.5=stop 1=backward
 
         self.previous_control_time = datetime.datetime.now()
-        self.subscription = self.create_subscription(String, '/vertial_joy', self.joy_callback, 1)
-        self.create_timer(0.1, self.change_speed) #0.1:if wait is too short, motor does not move
+        self.subscription = self.create_subscription(String, '/verchal_joy', self.joy_callback, 1)
+        self.create_timer(0.2, self.change_speed) #0.1:if wait is too short, motor does not move
         self.linear_L = 0
         self.linear_R = 0 
 
     def joy_callback(self, joy_msg):
-        self.linear_L = joy_msg.linear_L
-        self.linear_R = joy_msg.linear_R
+        rev = joy_msg.data.split(',')
+        self.linear_L = float(rev[1])
+        self.linear_R = float(rev[0])
         self.get_logger().info(f"(joy) left = {self.linear_L} right = {self.linear_R}")
 
     def ratio_to_duty(self, ratio):
@@ -49,7 +50,6 @@ class Thruster(Node):
         self.get_logger().info(f"pwm Right {ratio}")
         self.pwm_R.hardware_PWM(self.output_pin_R, self.pwm_frequency, self.ratio_to_duty(ratio))#0=forward 0.5=stop 1=backward        
 
-        
     def shutdown_callback(self):
         self.get_logger().info('Stop')
         self.pwm_L.hardware_PWM(self.output_pin_L, self.pwm_frequency, self.ratio_to_duty(0.5))#0=forward 0.5=stop 1=backward
@@ -66,4 +66,3 @@ def main(args=None):
     rclpy.shutdown(thruster.shutdown_callback)
 
 if __name__ == '__main__':
-    main()

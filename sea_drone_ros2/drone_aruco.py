@@ -21,12 +21,12 @@ class DroneControl(Node):
         self.pub = self.create_publisher(String, 'controller', 10)
         dictionaly = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
         self.detector = cv2.aruco.ArucoDetector(dictionaly)
-        self.id = 2
+        self.id = 0
         self.corners, self.ids = None, None
 
     def makeTargetRoute(self):
         #target_route = np.array([[0.9,0.1], [0.9,0.9], [0.1,0.9], [0.1,0.1], [-1,-1]])           
-        target_route = np.array([7,1,2,3,4,5])       
+        target_route = np.array([2,1,1,2,1,2])       
         return target_route
     
     def detectMarkers(self, frame):
@@ -38,7 +38,7 @@ class DroneControl(Node):
             for id, corner in zip(self.ids, self.corners):
                 if id[0] == self.id:
                     self.drone_p = (corner[0][0] + corner[0][1] + corner[0][2] + corner[0][3]) / 4 / self.img_size
-                    self.drone_v = ((corner[0][0] + corner[0][1])/2 - (corner[0][2] + corner[0][3])/2) / self.img_size
+                    self.drone_v = ((corner[0][0] + corner[0][1])/2 - (corner[0][2] + corner[0][3])/ 2) / self.img_size
                     self.my_recognize = True
 
     def getNextTarget(self,frame):
@@ -68,10 +68,10 @@ class DroneControl(Node):
             
     def get_drec(self, theta):
         if theta > 90:
-            angle = theta/40
+            angle = theta / 40
             forward = 0
         elif theta > 10:
-            angle = theta/30
+            angle = theta / 30
             forward = 0.03
         else:
             angle = 0
@@ -117,7 +117,6 @@ class DroneControl(Node):
 
         target_p = (self.target_p * self.img_size).astype(int)
         drone_p = (self.drone_p * self.img_size).astype(int)
-
         cv2.circle(img, tuple(target_p), 30, blue, thickness=-1) #target point
         if self.my_recognize and self.tg_recognize:
             if self.drone_v[0] != 0:

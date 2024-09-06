@@ -8,6 +8,7 @@ from rclpy.node import Node
 import rclpy
 from std_msgs.msg import String
 import datetime
+import math
 
 class Receiver(Node):
     def __init__(self):
@@ -25,11 +26,25 @@ class Receiver(Node):
         rev = data.data.split(',')
         speed = float(rev[0])
         angle = float(rev[1])
-        WHEEL_DIST = 1
-        self.linear_R = (angle*WHEEL_DIST)/2 + speed
-        self.linear_L = speed*2-self.linear_R
+        self.convert_LR(speed, angle)
+        self.previous_control_time = datetime.datetime.now() 
+
+    def convert_LR(self, sd, ag):
+
+        if ag > 0:
+            self.linear_R = -0.3
+            self.linear_L = 0
+        elif ag < 0:
+            self.linear_R = 0
+            self.linear_L = -0.3
+        elif ag == 0 and sd > 0:
+            self.linear_R = -0.3
+            self.linear_L = -0.3
+        else:
+            self.linear_R = 0
+            self.linear_L = 0
+
         self.get_logger().info("R:{},L:{}".format(self.linear_R, self.linear_L))
-        self.previous_control_time = datetime.datetime.now()
 
     def run(self, reset=False):
         msg = String()

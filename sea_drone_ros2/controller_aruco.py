@@ -20,7 +20,7 @@ def main(args=None):
     detector = cv2.aruco.ArucoDetector(dictionaly)
 
     rclpy.init()
-    #drone_obj = drone.DroneControl(img_size)
+    
     drone_obj = DroneControl(img_size) 
     rate = drone_obj.create_rate(10)
     # キャプチャがオープンしている間続ける
